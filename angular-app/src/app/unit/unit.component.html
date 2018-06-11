@@ -1,0 +1,417 @@
+<div class="container">
+    <div class="page-header">
+      <h1 style="text-align: center;" >Doctors</h1>
+    </div>
+    <div class="btn-group">
+      <button type="button" class="btn btn-primary"  (click)="getReady()">New</button>
+      <button type="button" class="btn btn-primary" (click)="getMyUnits()">Refresh</button>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-md-9 tab-content">
+            <div id="tip" class="tab-pane fade in active" style="border-left: solid gray 1px;">
+              <table class="table table-condensed">
+                <thead>
+                  <tr>
+                    <th>Description</th>
+                    <th>Type</th>
+                    <th>Category</th>
+                    <th>Guests</th>
+                    <th>Country</th>
+                    <th>City</th>
+                    <th>Street</th>
+                    <th>Number</th>
+                    <th style="width:100px;">Extras</th>
+                    <th>Images</th>
+                    <th style="width:100px;">Price Plans</th>
+                    <th>Available</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody *ngFor="let m of my_units; let i=index" id="tabela" #tabela>
+                  <tr>
+                    <td>{{m.opis}}</td>
+                    <td data-toggle="tooltip" title="{{m.tipSmestaja.opisTipa}}">{{m.tipSmestaja.nazivTipa}}</td>
+                    <td data-toggle="tooltip" title="{{m.kategorijaSmestaja.opisKategorije}}">{{m.kategorijaSmestaja.nazivKategorije}}</td>
+                    <td>{{m.brojOsoba}}</td>
+                    <td>{{m.lokacija.drzava}}</td>
+                    <td>{{m.lokacija.grad}}</td>
+                    <td>{{m.lokacija.ulica}}</td>
+                    <td>{{m.lokacija.broj}}</td>
+
+                    <td width="100px;">
+
+
+
+
+                        <div class="dropdown">
+                          <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">Extras
+                          <span class="caret"></span></button>
+                          <ul class="dropdown-menu">
+                            <li  *ngFor="let d of m.usluge"><a href="#" data-toggle="tooltip" title="d.usluga.opisUsluge">{{d.usluga.nazivUsluge}}</a></li>
+
+                          </ul>
+                        </div>
+
+
+
+
+                    </td>
+
+                        <td><button class="btn btn-primary"  type="button" (click)="createUrls(i, m.hjid)">Show Images</button>
+                            <div   [attr.id]="m.hjid" >
+                                <div *ngFor="let s of b64strings ">
+
+                                    <a><img [src]="'data:image/jpg;base64,'+s" style="width: 400px;height:250px;"/></a>
+                                </div>
+                            </div>
+
+
+                        </td>
+
+
+<!--
+<td><list-upload (click)="getIndex(i)" [slikeUrls] = "m.slike"></list-upload></td>
+-->
+
+                    <td width="100px;">
+
+
+
+
+                        <div class="dropdown">
+                          <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">Prices
+                          <span class="caret"></span></button>
+                          <ul class="dropdown-menu" >
+
+                            <li class="dropdown-header" *ngFor="let c of m.cene">
+                                <ul style="list-style-type: none;">
+                                    <li>
+                                    {{c.pocetakVazenja  | date:'dd/MM/yyyy'}} to {{c.krajVazenja | date:'dd/MM/yyyy'}}
+
+                                    </li>
+                                    <li><a href="#">${{c.cena}}</a></li>
+                                    <li class="divider"></li>
+                                </ul>
+                            </li>
+
+
+                          </ul>
+
+                      </div>
+
+
+
+                    </td>
+
+
+                    <td>
+
+
+
+                        <div class="dropdown">
+                          <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">Show Dates
+                          <span class="caret"></span></button>
+                          <ul class="dropdown-menu">
+                            <li  *ngFor="let z of m.listaZauzetosti"><a href="#">{{z.od  | date:'dd/MM/yyyy'}} - {{z.do  | date:'dd/MM/yyyy'}}</a></li>
+
+                          </ul>
+                          <button type="button" class="btn btn-basic btn-md" (click)="zauzmi(i)">Update</button>
+                        </div>
+
+
+
+
+
+
+
+                    </td>
+
+
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+
+        </div>
+    </div>
+
+</div>
+
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" role="dialog" #myModal>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" (click)="odustani()">&times;</button>
+        <h4 class="modal-title" style="text-align: center;">{{mode}}</h4>
+       </div>
+      <div class="modal-body">
+
+
+          <form class="form-horizontal" >
+
+
+            <div class="form-group">
+              <label class="control-label col-sm-2" for="country">Country:</label>
+              <div class="col-sm-10">
+                <input type="text"  [disabled]="editInProgress" class="form-control" id="country" placeholder="Enter Country" name="country" #country>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="control-label col-sm-2" for="city">City:</label>
+              <div class="col-sm-10">
+                <input type="text" [disabled]="editInProgress" class="form-control" id="city" placeholder="Enter City" name="city" #city>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="control-label col-sm-2" for="address">Address:</label>
+              <div class="col-sm-10">
+                <input type="text" [disabled]="editInProgress" class="form-control" id="address" placeholder="Enter Address" name="address" #address>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="control-label col-sm-2" for="anumber">Address number:</label>
+              <div class="col-sm-10">
+                <input type="number" [value]="idtext" [disabled]="editInProgress" class="form-control" id="anumber" placeholder="Enter Address Number" name="anumber" #anumber>
+              </div>
+            </div>
+
+
+
+            <div class="form-group">
+              <label class="control-label col-sm-2">Accomodation type:</label>
+              <div class="col-sm-10">
+                  <select (change)="typeChanged($event.target.value)" class="selectpicker">
+                    <option *ngFor="let type of types" value="{{type.nazivTipa}}" data-toggle="tooltip" title="{{type.opisTipa}}">{{type.nazivTipa}}</option>
+                  </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="control-label col-sm-2">Category:</label>
+              <div class="col-sm-10">
+                  <select (change)="catChanged($event.target.value)" class="selectpicker">
+                    <option *ngFor="let cat of cats" value="{{cat.nazivKategorije}}" data-toggle="tooltip" title="{{cat.opisKategorije}}">{{cat.nazivKategorije}}</option>
+                  </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="control-label col-sm-2" for="opis">Description:</label>
+              <div class="col-sm-10">
+                <textarea  class="form-control" id="opis" placeholder="Enter description" name="opis" #opis></textarea>
+              </div>
+            </div>
+
+            <div class="form-group">
+                <label  class="control-label col-sm-2" for="file">Choose </label>
+                <div class="col-sm-10">
+
+
+                       <form-upload></form-upload>
+
+                    	<br/>
+                    	<br/>
+
+                    	<list-upload></list-upload>
+                    </div>
+            </div>
+
+            <div class="form-group">
+              <label class="control-label col-sm-2" for="guests">Number of guests:</label>
+              <div class="col-sm-10">
+                <input type="number" class="form-control" id="guests" placeholder="Enter number of guests" name="guests" #guests>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="control-label col-sm-2">Additional Services:</label>
+              <div class="col-sm-10">
+                  <select [(ngModel)]="extrasModelProperty" (change)="printExtras()" class="selectpicker" name="extras_selected" multiple>
+                    <option *ngFor="let extra of extras" [value]="extra" data-toggle="tooltip" title="{{extra.opisUsluge}}">{{extra.nazivUsluge}}</option>
+                  </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="control-label col-sm-2" for="images">Price Plan:</label>
+              <div class="col-sm-10">
+                <button type="button" class="btn btn-primary btn-xm" data-toggle="modal" data-target="#modalDatumPlanCena" >Add New</button>
+              </div>
+
+
+
+            </div>
+
+
+            <div class="form-group">
+              <label class="control-label col-sm-2" for="country"></label>
+              <div class="col-sm-10">
+                  {{cene | json}}
+                  <hr>
+
+              </div>
+            </div>
+          </form>
+      </div>
+      <div class="modal-footer">
+        <button
+        type="button"
+        class="btn btn-info"
+        data-dismiss="modal"
+        (click)="createNewUnit(
+        country.value,
+        city.value,
+        address.value,
+        anumber.value,
+        opis.value,
+        guests.value
+
+
+        )">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="modalZauzimanje" role="dialog" #modalZauzimanje>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" (click)="odustani()">&times;</button>
+        <h4 class="modal-title" style="text-align: center;">{{mode}}</h4>
+       </div>
+      <div class="modal-body">
+
+
+          <form class="form-horizontal" >
+
+
+            <div class="form-group">
+              <label class="control-label col-sm-2" for="country">Dates:</label>
+              <div class="col-sm-10">
+
+
+                  <p>Select days</p>
+
+                        <ngb-datepicker #dp (select)="onDateSelection($event)" [displayMonths]="2" [dayTemplate]="t">
+                        </ngb-datepicker>
+
+                        <ng-template #t let-date="date" let-focused="focused">
+                          <span class="custom-day"
+                                [class.focused]="focused"
+                                [class.range]="isFrom(date) || isTo(date) || isInside(date) || isHovered(date)"
+                                [class.faded]="isHovered(date) || isInside(date)"
+                                (mouseenter)="hoveredDate = date"
+                                (mouseleave)="hoveredDate = null">
+                            {{ date.day }}
+                          </span>
+                        </ng-template>
+
+                        <hr>
+
+                        <pre>From: {{ fromDate | json }} </pre>
+                        <pre>To: {{ toDate | json }} </pre>
+
+
+              </div>
+            </div>
+
+
+
+
+          </form>
+      </div>
+      <div class="modal-footer">
+        <button
+        type="button"
+        class="btn btn-info"
+        data-dismiss="modal"
+        (click)="saveZauzetost()">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="modalDatumPlanCena" role="dialog">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" (click)="odustani()">&times;</button>
+        <h4 class="modal-title" style="text-align: center;">{{mode}}</h4>
+       </div>
+      <div class="modal-body">
+
+
+          <form class="form-horizontal" >
+
+
+            <div class="form-group">
+              <label class="control-label col-sm-2" for="country">Dates:</label>
+              <div class="col-sm-10">
+
+                  <p>Select days</p>
+
+                        <ngb-datepicker #dp (select)="onDateSelection($event)" [displayMonths]="2" [dayTemplate]="t">
+                        </ngb-datepicker>
+
+                        <ng-template #t let-date="date" let-focused="focused">
+                          <span class="custom-day"
+                                [class.focused]="focused"
+                                [class.range]="isFrom(date) || isTo(date) || isInside(date) || isHovered(date)"
+                                [class.faded]="isHovered(date) || isInside(date)"
+                                (mouseenter)="hoveredDate = date"
+                                (mouseleave)="hoveredDate = null">
+                            {{ date.day }}
+                          </span>
+                        </ng-template>
+
+                        <hr>
+
+                        <pre>From: {{ fromDate | json }} </pre>
+                        <pre>To: {{ toDate | json }} </pre>
+
+
+              </div>
+            </div>
+
+
+            <div class="form-group">
+              <label class="control-label col-sm-2" for="price">$ Price:</label>
+              <div class="col-sm-10">
+                <input type="number" class="form-control" id="price" placeholder="Enter price for this period" name="price" #price>
+              </div>
+            </div>
+
+
+
+
+          </form>
+      </div>
+      <div class="modal-footer">
+        <button
+        type="button"
+        class="btn btn-info"
+        data-dismiss="modal"
+        (click)="saveNewPricePlan(price.value)">Save</button>
+      </div>
+    </div>
+  </div>
+</div>

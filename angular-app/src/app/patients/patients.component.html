@@ -1,0 +1,197 @@
+<div class="container">
+    <div class="page-header">
+      <h1 style="text-align: center;" >Messages</h1>
+    </div>
+    <div class="btn-group">
+      <button type="button" class="btn btn-primary" (click)="getMyMessages()">Refresh</button>
+
+
+    </div>
+
+
+    <hr>
+    <div class="row">
+        <div class="col-md-3">
+          <ul class="nav nav-pills nav-stacked">
+            <li class="active"><a data-toggle="pill" href="#inbox">Inbox</a></li>
+            <li><a data-toggle="pill" href="#sent">Sent</a></li>
+
+           </ul>
+        </div>
+
+        <div class="col-md-9 tab-content">
+
+            <div id="inbox" class="tab-pane fade in active" style="border-left: solid gray 1px;">
+              <table class="table table-condensed">
+
+                <thead>
+                  <tr>
+                    <th>From</th>
+                  </tr>
+                </thead>
+                <tbody *ngFor="let m of my_messages; let i=index">
+
+                  <tr *ngIf="m.senderType=='User'">
+                    <td >
+                        <button type="button" class="btn btn-default btn-block"  (click)="openMessage(m)">{{m.user.username}}</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+
+            <div id="sent" class="tab-pane fade in" style="border-left: solid gray 1px;">
+              <table class="table table-condensed">
+                            <thead>
+                              <tr>
+                                <th>To</th>
+                              </tr>
+                            </thead>
+                            <tbody *ngFor="let m of my_messages">
+                               <tr *ngIf="m.senderType=='Agent'">
+                                 <td >
+                                     <button type="button" class="btn btn-default btn-block" (click)="openSentMessage(m.content)">{{m.user.username}}</button>
+                                 </td>
+
+
+                              </tr>
+                            </tbody>
+              </table>
+            </div>
+
+        </div>
+
+        </div>
+
+</div>
+
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="newMessageModal" role="dialog" >
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" (click)="odustani()">&times;</button>
+        <h4 class="modal-title" style="text-align: center;">{{mode}}</h4>
+       </div>
+      <div class="modal-body">
+
+
+          <form class="form-horizontal" >
+
+
+            <div class="form-group">
+              <label class="control-label col-sm-2" for="idd">To:</label>
+              <div class="col-sm-10">
+                <input type="text" [value]="idtext" [disabled]="editInProgress" class="form-control" id="idd" placeholder="To whom" name="idd" #idd>
+              </div>
+            </div>
+
+
+            <div class="form-group" style="height: 300px;">
+              <label class="control-label col-sm-2" for="opis">Message:</label>
+              <div class="col-sm-10">
+                <textarea  style="height: 300px;" [value]="opistext" class="form-control" id="opis" placeholder="" name="" ></textarea>
+              </div>
+            </div>
+
+
+
+
+
+          </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success" data-dismiss="modal" (click)="test(r1.checked,r2.checked,r3.ckecked,idd.value,cname.value,opis.value)">Send</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="openMessageModule" role="dialog" #openMessageModule>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" (click)="odustani()">&times;</button>
+
+       </div>
+      <div class="modal-body">
+
+
+          <form class="form-horizontal" >
+
+
+            <div class="form-group">
+              <label class="control-label col-sm-2" for="from">Sender:</label>
+              <div class="col-sm-10" name="from">
+                  {{from}}
+              </div>
+            </div>
+
+
+            <div class="form-group" style="height: 200px;">
+              <label class="control-label col-sm-2" for="opis">Message:</label>
+              <div class="col-sm-10">
+                <textarea disabled style="height: 200px;" class="form-control" #contentrecieved>{{contentrec}}</textarea>
+              </div>
+            </div>
+
+            <div class="form-group" style="height: 200px;">
+              <label class="control-label col-sm-2" for="opis"></label>
+              <div class="col-sm-10">
+                <textarea  style="height: 200px;" class="form-control"  placeholder="Reply" name="opis" #replycontent></textarea>
+              </div>
+            </div>
+
+
+            <div class="modal-footer">
+              <button type="button" class="btn" data-dismiss="modal">Dismiss</button>
+              <button type="button" class="btn btn-success" style="width:60px;" data-dismiss="modal" (click)="reply(replycontent)">  Send  </button>
+
+            </div>
+
+
+
+          </form>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="sentModal" role="dialog" #sentModal>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" (click)="odustani()">&times;</button>
+
+       </div>
+      <div class="modal-body">
+
+
+          <form class="form-horizontal" >
+
+            <div class="form-group" style="height: 200px;">
+              <label class="control-label col-sm-2" for="opis">Message:</label>
+              <div class="col-sm-10">
+                <textarea disabled style="height: 200px;" class="form-control" #contentrecieved>{{sentcontent}}</textarea>
+              </div>
+            </div>
+
+            <div class="modal-footer">
+              <button type="button" class="btn" data-dismiss="modal">Close</button>
+            </div>
+
+
+
+          </form>
+      </div>
+
+    </div>
+  </div>
+</div>
