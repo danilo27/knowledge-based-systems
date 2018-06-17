@@ -1,0 +1,107 @@
+<div class="container">
+    <div class="page-header">
+      <h1 style="text-align: center;" >Ingredients</h1>
+    </div>
+    <div class="btn-group">
+      <button type="button" class="btn btn-primary"  data-toggle="modal" data-target="#newi">Add</button>
+
+
+    </div>
+
+
+    <hr>
+    <div class="row">
+        <div class="col-md-9 tab-content">
+
+            <div id="inbox" class="tab-pane fade in active" style="border-left: solid gray 1px;">
+              <table class="table table-condensed">
+
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+
+                  </tr>
+                </thead>
+                <tbody *ngFor="let m of ingredients; let i=index">
+
+                  <tr>
+                    <td >{{m.id}}</td >
+                    <td >{{m.name}}</td >
+
+                    <td >
+                        <button type="button" class="btn btn-default btn-block"  (click)="update(m.id)">Update</button>
+                    </td>
+                    <td >
+                        <button type="button" class="btn btn-default btn-block"  (click)="delete(m.id)">Delete</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+
+            <div id="sent" class="tab-pane fade in" style="border-left: solid gray 1px;">
+              <table class="table table-condensed">
+                            <thead>
+                              <tr>
+                                <th>To</th>
+                              </tr>
+                            </thead>
+                            <tbody *ngFor="let m of my_messages">
+                               <tr *ngIf="m.senderType=='Agent'">
+                                 <td >
+                                     <button type="button" class="btn btn-default btn-block" (click)="openSentMessage(m.content)">{{m.user.username}}</button>
+                                 </td>
+
+
+                              </tr>
+                            </tbody>
+              </table>
+            </div>
+
+        </div>
+
+        </div>
+
+</div>
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="newi" role="dialog" #newi>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" (click)="odustani()">&times;</button>
+
+       </div>
+      <div class="modal-body">
+
+
+          <form class="form-horizontal" >
+
+
+              <div class="form-group">
+                <label class="control-label col-sm-2" for="country">Name:</label>
+                <div class="col-sm-10">
+                  <input type="text"  [disabled]="editInProgress" class="form-control" id="dis_name" placeholder="Enter Name" name="firstname" #dis_name>
+                </div>
+              </div>
+
+
+
+            <div class="modal-footer">
+              <button type="button" class="btn" data-dismiss="modal">Dismiss</button>
+              <button type="button" class="btn btn-success" style="width:60px;" data-dismiss="modal" (click)="save(dis_name.value)">  Create  </button>
+
+            </div>
+
+
+
+          </form>
+      </div>
+
+    </div>
+  </div>
+</div>

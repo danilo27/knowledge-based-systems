@@ -1,0 +1,61 @@
+package drools.spring.rules;
+
+import com.drools.spring.example.facts.Item;
+import com.model.Symptom;
+import com.model.Disease;
+import com.model.DiseaseHistory;
+import java.util.Collections;
+import java.util.Comparator;
+import com.dto.DroolsDTO;
+import com.utils.DateUtils;
+import com.dto.DroolsDisSymps;
+import com.dto.DisSympMap;
+
+rule "All possible diseases for given symptoms"
+	agenda-group "all_possible"
+    when  	
+    	$disease: Disease($symps: symptoms)
+    	accumulate( Symptom( $n: name ) from $symps; $names: collectList( $n ) )
+    	$object: DroolsDisSymps( )
+    	$passed_symptoms : List( ) from collect (String())
+    	$numOfSymptoms: Number() from accumulate(
+    		$symptom: String() from $passed_symptoms,
+    		init(int num=0;)
+    		action(if($names.contains($symptom)){num++;})
+    		result(num)
+    	)
+    	eval($numOfSymptoms.intValue()>0)
+	then
+		
+		DisSympMap map = new DisSympMap($disease.getName(),$numOfSymptoms.intValue());
+     	$object.getMaps().add(map);
+		
+		System.out.println("***********");
+     	System.out.println( "Disease: "+$disease.getName()+", matching symptoms number:" + $numOfSymptoms);
+     	System.out.println("Symptoms: " + $passed_symptoms);
+     	System.out.println("Dis Symptoms: "+$names);
+     	System.out.println("***********");
+     		  
+end
+
+//rule "sorting"
+//	agenda-group "all_possible_sort"
+//    when
+//        $number : Number( )
+//        not Number( intValue() < $number.intValue )
+//    then
+//        System.out.println("Number found with value: " + $number.intValue() ); 
+//       retract( $number );
+//end
+
+
+rule "sorting"
+	agenda-group "all_possible_sort"
+    when
+        $object: DroolsDisSymps( )
+    then
+       Collections.sort($object.getMaps(), new Comparator<DisSympMap>() { public int compare(DisSympMap a1, DisSympMap a2) {
+		     return a1.getNumberOfSymptoms() - a2.getNumberOfSymptoms();}});
+		Collections.reverse($object.getMaps());
+end
+

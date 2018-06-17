@@ -1,0 +1,521 @@
+<div class="container">
+    <div class="page-header">
+      <h1 style="text-align: center;" >Diagnoses</h1>
+    </div>
+
+    <div [ngSwitch]="what_diagnose" >
+
+        <div *ngSwitchCase="'patient_chosen'">
+            <h4>Patient: <strong>{{id}} {{firstname}} {{lastname}}</strong></h4>
+                <div class="btn-group">
+                  <button type="button" class="btn btn-primary"  data-toggle="modal" (click)="choosing_symps()" data-target="#newdiag">Choose Symptoms</button>
+                  <button type="button" class="btn btn-primary"  data-toggle="modal" (click)="reset()" data-target="#dis_entering">Enter Disease</button>
+                  <button type="button" class="btn btn-primary"  data-toggle="modal" (click)="reset()" data-target="#set_up">Set Up Diagnose</button>
+                </div>
+        </div>
+        <div *ngSwitchCase="'add_patient'">
+             <button type="button" class="btn btn-success"  data-toggle="modal" data-target="#newpat" (click)="resetPat()">New Diagnose</button>
+        </div>
+    </div>
+
+
+    <hr>
+
+    <div [ngSwitch]="what" >
+
+        <div *ngSwitchCase="'symp_choosing'">
+                <div class="row">
+                    <div class="col-md-9 tab-content">
+
+                        <div id="inbox" class="tab-pane fade in active" style="border-left: solid gray 1px;">
+                          <table class="table table-condensed">
+
+                            <thead>
+                              <tr>
+
+                                <th>Chosen Symptoms</th>
+
+                              </tr>
+                            </thead>
+                            <tbody *ngFor="let a of symps_added; let i=index">
+
+                              <tr>
+
+                                <td >
+                                 {{a.name}}
+
+
+                                </td >
+
+
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+
+
+
+
+                    </div>
+
+                    </div>
+
+
+
+                    <div class="btn-group">
+                      <button type="button" class="btn btn-success"  (click)="startResoner()">Start Resoner</button>
+                    </div>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-warning"  (click)="allPossible()">Diseases with these symptoms</button>
+                    </div>
+
+
+            </div>
+
+
+
+
+
+
+
+            <div *ngSwitchCase="'terapy_result'">
+                    <div class="row">
+                        <div class="col-md-9 tab-content">
+
+                            <div id="inbox" class="tab-pane fade in active" style="border-left: solid gray 1px;">
+                              <table class="table table-condensed">
+
+                                <thead>
+                                  <tr>
+
+                                    <th>For Symptoms</th>
+
+                                  </tr>
+                                </thead>
+                                <tbody *ngFor="let a of symps_added; let i=index">
+
+                                  <tr>
+
+                                    <td >
+                                     {{a.name}}
+
+
+                                    </td >
+
+
+                                  </tr>
+                                </tbody>
+                              </table>
+
+
+                          </div>
+
+                          <br>
+
+                                <h4>Disease is: <strong>{{res_dis}}</strong></h4>
+                                <br>
+
+
+                        </div>
+
+                        </div>
+
+
+
+                        <div class="btn-group">
+                          <button type="button" class="btn btn-success"  data-toggle="modal" data-target="#newterapy">Create Terapy</button>
+                        </div>
+
+
+
+                </div>
+
+
+
+
+
+
+
+                <div *ngSwitchCase="'all_dis_div'">
+                        <div class="row">
+                            <div class="col-md-9 tab-content">
+
+                                <div id="inbox" class="tab-pane fade in active" style="border-left: solid gray 1px;">
+                                  <table class="table table-condensed">
+
+                                    <thead>
+                                      <tr>
+
+                                        <th>For Symptoms</th>
+
+                                      </tr>
+                                    </thead>
+                                    <tbody *ngFor="let a of symps_added; let i=index">
+
+                                      <tr>
+
+                                        <td >
+                                         {{a.name}}
+
+
+                                        </td >
+
+
+                                      </tr>
+                                    </tbody>
+                                  </table>
+
+
+                              </div>
+
+                              <br>
+                                  <h4>Diseases connected to given symptoms:  </h4>
+                                  <ul>
+                                    <li  *ngFor="let a of all_possible" style="font-size:15px"><strong> {{a.disease}} with {{a.numberOfSymptoms}} symptoms matching</strong></li>
+                                  </ul>
+                                    <br>
+
+
+                            </div>
+
+                            </div>
+
+
+
+                            <div class="btn-group">
+                              <button type="button" class="btn btn-success"  data-toggle="modal" data-target="#newterapy">Create Terapy</button>
+                            </div>
+
+
+
+                    </div>
+
+
+
+
+
+
+
+
+
+    </div>
+
+
+
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="newdiag" role="dialog" #newdiag>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" (click)="odustani()">&times;</button>
+
+       </div>
+      <div class="modal-body">
+
+
+          <form class="form-horizontal" >
+
+              <div class="form-group">
+                <label class="control-label col-sm-2">Choose Symptoms:</label>
+                <div class="col-sm-10" >
+
+                    <select [size]="symps.length" [(ngModel)]="symps_added"  class="selectpicker" name="extras_selected" multiple>
+                      <option *ngFor="let s of symps" [value]="s"  >{{s.name}}</option>
+                    </select>
+
+                </div>
+              </div>
+
+
+            <div class="modal-footer">
+              <button type="button" class="btn" data-dismiss="modal">Dismiss</button>
+              <button type="button" class="btn btn-success"   data-dismiss="modal">  Save  </button>
+
+            </div>
+
+
+
+          </form>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="newterapy" role="dialog" #newterapy>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" (click)="odustani()">&times;</button>
+
+       </div>
+      <div class="modal-body">
+
+          <h3>Terapy for Disease: <strong>{{res_dis}}</strong></h3>
+          <h4>Patient: <strong>{{id}} {{firstname}} {{lastname}}</strong></h4>
+          <hr>
+          <form class="form-horizontal" >
+
+
+
+
+
+
+              <div class="form-group">
+                <label class="control-label col-sm-2">Choose Drugs:</label>
+                <div class="col-sm-10" >
+
+                    <select [size]="all_drugs.length" [(ngModel)]="drugs_added"  class="selectpicker" name="extras_selected" multiple>
+                      <option *ngFor="let s of all_drugs" [value]="s"  >{{s.naziv}}</option>
+                    </select>
+
+                </div>
+              </div>
+
+
+
+
+            <div class="modal-footer">
+              <button type="button" class="btn" data-dismiss="modal">Dismiss</button>
+               <button type="button" class="btn btn-danger" (click)="validate()">Validate</button>
+              <button type="button" class="btn btn-success"   data-dismiss="modal" (click)="saveTerapy()">  Save  </button>
+
+            </div>
+
+
+
+          </form>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="dis_entering" role="dialog" #dis_entering>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" (click)="odustani()">&times;</button>
+
+       </div>
+      <div class="modal-body">
+
+
+          <form class="form-horizontal" >
+
+              <div class="form-group">
+                <label class="control-label col-sm-2" for="country">Disease:</label>
+                <div class="col-sm-10">
+                  <input type="text"  [disabled]="editInProgress" class="form-control" id="ent_dis" placeholder="Enter Name" name="ent_dis" #ent_dis>
+                </div>
+              </div>
+
+
+            <div class="modal-footer">
+              <button type="button" class="btn" data-dismiss="modal">Dismiss</button>
+              <button type="button" class="btn btn-success"   (click)="searchForDis(ent_dis.value)">  Search  </button>
+
+            </div>
+
+
+
+          </form>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="set_up" role="dialog" #set_up>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" (click)="odustani()">&times;</button>
+
+       </div>
+      <div class="modal-body">
+
+
+          <form class="form-horizontal" >
+
+              <div class="form-group">
+                <label class="control-label col-sm-2">Choose Symptoms:</label>
+                <div class="col-sm-10" >
+
+                    <select [size]="symps.length" [(ngModel)]="symps_added"  class="selectpicker" name="extras_selected" multiple>
+                      <option *ngFor="let s of symps" [value]="s"  >{{s.name}}</option>
+                    </select>
+
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="control-label col-sm-2">Disease Is:</label>
+                <div class="col-sm-10" >
+
+                    <select [size]="diseases.length" [(ngModel)]="dis_chosen"  class="selectpicker" name="extras_selected" multiple>
+                      <option *ngFor="let s of diseases" [value]="s"  >{{s.name}}</option>
+                    </select>
+
+                </div>
+              </div>
+
+
+            <div class="modal-footer">
+              <button type="button" class="btn" data-dismiss="modal">Dismiss</button>
+              <button type="button" class="btn btn-success"   data-dismiss="modal" (click)="saveDiag()">  Save  </button>
+
+            </div>
+
+
+
+          </form>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="newpat" role="dialog" #newpat>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" (click)="odustani()">&times;</button>
+
+       </div>
+      <div class="modal-body">
+
+
+          <form class="form-horizontal" >
+
+              <div class="form-group">
+                <label class="control-label col-sm-2">Patients in Database:</label>
+                <div class="col-sm-10" >
+
+                    <select [size]="pats.length" [(ngModel)]="pat_added" (change)="patAdded()"  class="selectpicker" name="extras_selected" multiple>
+                      <option *ngFor="let s of pats" [value]="s" >{{s.id}} {{s.firstname}} {{s.lastname}}</option>
+                    </select>
+
+                </div>
+              </div>
+
+
+            <div class="modal-footer">
+              <button type="button" class="btn" data-dismiss="modal">Dismiss</button>
+
+
+              <button type="button" class="btn btn-success"   data-dismiss="modal" (click)=savePat()>  Save  </button>
+
+            </div>
+
+
+
+          </form>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="warning_modal" role="dialog" #warning_modal>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" (click)="odustani()">&times;</button>
+
+       </div>
+      <div class="modal-body">
+
+
+
+
+
+                <label>Patient: {{id}} {{firstname}} {{lastname}}</label>
+                <!--
+                <div class="dropdown">
+                    <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">Warnings
+                    <span class="caret"></span></button>
+                      <ul class="dropdown-menu">
+                        <li  *ngFor="let a of warnings"><a href="#" data-toggle="tooltip" >{{a.name}}</a></li>
+
+                      </ul>
+                </div>
+            -->
+
+            <div *ngIf="warnings.length == 0; else elseBlock"><strong><h3 style="color:green;font-size:30px">No Warnings!</h3></strong></div>
+            <ng-template #elseBlock>
+                <strong><h3 style="color:red;font-size:30px">Warning!</h3></strong>
+                <h4>Patient is allergic on:</h4>
+                <ul>
+                  <li  *ngFor="let a of warnings" style="color:red;font-size:30px"> {{a}}</li>
+                </ul>
+            </ng-template>
+
+
+
+            <div class="modal-footer">
+              <button type="button" class="btn btn-success"   data-dismiss="modal" (click)=savePat()>Acknowledge</button>
+          </div>
+
+
+
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="symps_for_dis" role="dialog" #symps_for_dis>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" (click)="odustani()">&times;</button>
+
+       </div>
+      <div class="modal-body">
+
+
+
+                <strong><h3 style="font-size:30px">Symptoms for disease: {{dis_name}}</h3></strong>
+                <h4>Specific:</h4>
+                <ul>
+                  <li  *ngFor="let a of returned_symps['specific']" style="font-size:20px"> {{a}}</li>
+                </ul>
+                <h4>General:</h4>
+                <ul>
+                  <li  *ngFor="let a of returned_symps['general']" style="font-size:20px"> {{a}}</li>
+                </ul>
+
+
+
+            <div class="modal-footer">
+              <button type="button" class="btn btn-success"   data-dismiss="modal" (click)=vracenaBolest()>OK</button>
+          </div>
+
+
+
+
+      </div>
+
+    </div>
+  </div>
+</div>

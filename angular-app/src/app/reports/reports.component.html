@@ -1,0 +1,61 @@
+<div class="container">
+   <div class="page-header">
+     <h1 style="text-align: center;" >Reports</h1>
+   </div>
+
+   <button type="button" class="btn btn-primary" (click)="chronic()"  >Potential Chronic Diseases Report</button>
+   <button type="button" class="btn btn-primary" (click)="addict()">Potential Addicts Report</button>
+   <button type="button" class="btn btn-primary"  (click)="lowim()">Low Immunity Report</button>
+
+
+   <hr>
+
+   <div [ngSwitch]="what" >
+
+       <div *ngSwitchCase="'chronics_result'">
+               <div  >
+                   <br>
+                       <h3>Potential Chronic Patients:</h3>
+                       <ul>
+                         <li  *ngFor="let a of chronics" style="font-size:18px">
+                             <strong> {{a.firstname}} {{a.lastname}} <i  style="color:red;font-size:20px">{{a.report_warnings}}</i></strong></li>
+                       </ul>
+                         <br>
+
+               </div>
+        </div>
+
+        <div *ngSwitchCase="'addicts_result'">
+                <div  >
+                    <br>
+                        <h3>Potential Addicts:</h3>
+                        <ul>
+                          <li  *ngFor="let a of addicts" style="font-size:18px">
+                              <strong> {{a.firstname}} {{a.lastname}} <i  style="color:red;font-size:20px">{{a.report_warnings}}</i></strong></li>
+                        </ul>
+                          <br>
+
+                </div>
+         </div>
+
+         <div *ngSwitchCase="'low_result'">
+                 <div  >
+                     <br>
+                         <h3>Low Immunity Patients:</h3>
+                         <ul>
+                           <li  *ngFor="let a of chronics" style="font-size:18px">
+                               <strong> {{a.firstname}} {{a.lastname}} <i  style="color:red;font-size:20px">{{a.report_warnings}}</i></strong></li>
+                         </ul>
+                           <br>
+
+                 </div>
+          </div>
+
+
+
+
+   </div>
+
+
+
+</div>

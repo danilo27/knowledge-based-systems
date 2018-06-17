@@ -13,7 +13,7 @@ import {DocworkspaceComponent} from './docworkspace/docworkspace.component';
 const routes: Routes = [
   {
     path: '',
-    component: DocworkspaceComponent,
+    component: LoginComponent,
     pathMatch: 'full'
   },
   {

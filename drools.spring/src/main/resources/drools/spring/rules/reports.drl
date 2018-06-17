@@ -1,0 +1,64 @@
+package drools.spring.rules;
+
+import com.drools.spring.example.facts.Item;
+import com.model.Symptom;
+import com.model.Disease;
+import com.model.DiseaseHistory;
+import java.util.Collections;
+import java.util.Comparator;
+import com.dto.DroolsDTO;
+import com.utils.DateUtils;
+import com.dto.DroolsDisSymps;
+import com.dto.DisSympMap;
+import com.model.Patient;
+import com.model.Terapy;
+import com.dto.DateUtilsDTO;
+import com.dto.DroolsReport;
+import com.model.Doctor;
+
+
+rule "Patients with potential chronic diseases"
+	agenda-group "chronics"
+    when
+    	$dateUtils: DateUtilsDTO()
+    	$report: DroolsReport()
+    	$patient: Patient($terapies: terapies)
+    	$disease: Disease(name!="Prehlada", name!="Groznica")
+    	Number(intValue > 5) from accumulate(
+    		$terapy: Terapy(disease == $disease.getName()) from $terapies,
+    		init(int times=0;),
+    		action(if( 
+    			($dateUtils.getCurrent().getTime()-$terapy.getDatum().getTime()) 
+    				< $dateUtils.getTwo_years()){times++;}), result(times)
+    	)
+    then
+    	System.out.println($patient.getFirstname()+" "+ $patient.getLastname() + " bolovao od: "+$disease.getName()+" vise od 5 puta u poslednje 2 godine");
+        $patient.getReport_warnings().add("Lecen od " + $disease.getName() + " vise od 5 puta u poslednje 2 godine");
+        $report.getPatients().add($patient);
+ 
+end
+
+rule "Potential addicts"
+	agenda-group "addicts"
+    when
+    	 
+    	$dateUtils: DateUtilsDTO()
+    	$report: DroolsReport()
+    	$patient: Patient($terapies: terapies, threatedBy >= 3)    
+    	$puta: Number(intValue >= 6) from accumulate (
+			$terapy: Terapy( validate("Analgetic") == true, $doc: doctor) from $terapies,
+			
+			init(int times=0;),
+			action(if((
+				$dateUtils.getCurrent().getTime() 
+				- $terapy.getDatum().getTime()) < $dateUtils.getSix_months()) {
+					times++;}),
+				result(times)
+		)
+		 
+    then
+    	System.out.println($patient.getFirstname()+" "+ $patient.getLastname()+" potential addict");
+    	$patient.getReport_warnings().add("Is potential addict!");
+        $report.getPatients().add($patient);
+      
+end

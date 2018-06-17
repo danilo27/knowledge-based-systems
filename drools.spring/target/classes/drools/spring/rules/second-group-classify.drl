@@ -1,0 +1,42 @@
+package drools.spring.rules;
+
+import com.drools.spring.example.facts.Item;
+import com.model.Symptom;
+import com.model.Disease;
+import com.model.DiseaseHistory;
+import com.dto.DroolsDTO;
+import com.utils.DateUtils;
+import com.dto.SymptomsForDisDTO;
+
+rule "Hipertenzija"
+	agenda-group "most_probable"
+    when
+    	$drools_dto: DroolsDTO($symps: symps)
+    	$count: Number(intValue == 1) from accumulate (
+    		String(this=="U poslednjih 6 meseci preko 10 puta imao visok pritisak"
+    		  ) from $symps,
+    		count(1)
+    		)
+    then	
+       	Disease d = new Disease(Long.valueOf(1), "Hipertenzija", 1, $symps);
+    	$drools_dto.getDiseases().add(d);
+		System.out.println("[DROOLS] Disease is Hipertenzija ");
+end
+
+rule "Dijabetes"
+    agenda-group "most_probable"
+    when
+       	$drools_dto: DroolsDTO($symps: symps)
+    	$count: Number(intValue == 4) from accumulate (
+    		String(this=="Cesto uriniranje"
+    		 || this=="Gubitak telesne tezine"
+    		 || this=="Zamor" 
+    		 || this=="Mucnina i povracanje") from $symps,
+    		count(1)
+    	)
+    then
+        Disease d = new Disease(Long.valueOf(1), "Dijabetes", 1, $symps);
+        $drools_dto.getDiseases().add(d);
+		System.out.println("[DROOLS] Disease is: Dijabetes");
+		System.out.println("For symptoms: " + $symps);
+end

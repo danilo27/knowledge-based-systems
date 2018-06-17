@@ -1,0 +1,65 @@
+package drools.spring.rules;
+
+import com.drools.spring.example.facts.Item;
+import com.model.Symptom;
+import com.model.Disease;
+import com.model.DiseaseHistory;
+import com.dto.DroolsDTO;
+import com.utils.DateUtils;
+import com.dto.SymptomsForDisDTO;
+
+//Simbol * predstavlja specifičan simbol. 
+//Za dijagnostiku bolesti treće grupe potrebno je da pacijent ima barem jedan
+//specifičan simptom i barem dva opšta simptoma. 
+//Bolesti iz treće grupe su uzajamno isključivi.
+
+rule "Hronicna bubrezna bolest"
+    agenda-group "most_probable"
+    when
+       	$drools_dto: DroolsDTO($symps: symps)
+    	$countGeneral: Number(intValue >= 2) from accumulate (
+    		String(this=="Zamor"
+    		 || this=="Nocturia"
+    		 || this=="Otoci nogu i zglobova" 
+    		 || this=="Bol u grudima") from $symps,
+    		count(1)
+    	)
+    	$countSpecific: Number(intValue >= 1) from accumulate (
+    		String(this=="Boluje od hipertenzije vise od 6 meseci"
+    		 || this=="Boluje od dijabetesa"
+    		) from $symps,
+    		count(1)
+    	)
+    then
+        Disease d = new Disease(Long.valueOf(1), "Hronicna bubrezna bolest", 1, null);
+        $drools_dto.getDiseases().add(d);
+		System.out.println("[DROOLS] Disease is: Hronicna bubrezna bolest");
+		System.out.println("For symptoms: " + $symps);
+end
+
+
+rule "Akutna bubrezna povreda"
+    agenda-group "most_probable"
+    when
+       	$drools_dto: DroolsDTO($symps: symps)
+       	$countGeneral: Number(intValue >= 2) from accumulate (
+    		String(this=="Zamor"
+    		 || this=="Gusenje"
+    		 || this=="Otoci nogu i zglobova"
+    		 || this=="Dijareja" 
+    		 ) from $symps,
+    		count(1)
+    	)
+    	$countSpecific: Number(intValue >= 1) from accumulate (
+    		String(this=="Oporavlja se od operacije"
+    		 || this=="U poslednjih 14 dana dijagnostikovana povisena temperatura"
+    		 || this=="U poslednjih 21 dan primao antibiotike" 
+    		) from $symps,
+    		count(1)
+    	)
+    then
+        Disease d = new Disease(Long.valueOf(1), "Akutna bubrezna povreda", 1, null);
+        $drools_dto.getDiseases().add(d);
+		System.out.println("[DROOLS] Disease is: Akutna bubrezna povreda");
+		System.out.println("For symptoms: " + $symps);
+end

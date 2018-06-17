@@ -1,0 +1,195 @@
+<div class="container">
+    <div class="page-header">
+      <h1 style="text-align: center;" >Doctors</h1>
+    </div>
+    <div class="btn-group">
+      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newdoc">Add</button>
+
+
+    </div>
+
+
+    <hr>
+    <div class="row">
+        <div class="col-md-9 tab-content">
+
+            <div id="inbox" class="tab-pane fade in active" style="border-left: solid gray 1px;">
+              <table class="table table-condensed">
+
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+
+                  </tr>
+                </thead>
+                <tbody *ngFor="let m of patients; let i=index">
+
+                  <tr *ngIf="m.type=='doctor'">
+                    <td >{{m.id}}</td >
+                    <td >{{m.firstname}}</td >
+                    <td >{{m.lastname}}</td >
+
+
+
+
+
+                    <td >
+                        <button type="button" class="btn btn-default btn-block"  (click)="update_set(m.id)">Update</button>
+                    </td>
+                    <td >
+                        <button type="button" class="btn btn-default btn-block"  (click)="delete(m.id)">Delete</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+
+
+
+        </div>
+
+        </div>
+
+</div>
+
+
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="newdoc" role="dialog" #newdoc>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" (click)="odustani()">&times;</button>
+
+       </div>
+       <div class="modal-body">
+
+
+          <form class="form-horizontal" >
+
+
+
+
+
+
+              <div class="form-group">
+                <label class="control-label col-sm-2" for="country">First Name:</label>
+                <div class="col-sm-10">
+                  <input type="text"  [disabled]="editInProgress" class="form-control" id="firstname" placeholder="Enter Fist Name" name="firstname" #firstname>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="control-label col-sm-2" for="country">Last Name:</label>
+                <div class="col-sm-10">
+                  <input type="text"  [disabled]="editInProgress" class="form-control" id="lastname" placeholder="Enter Last Name" name="lastname" #lastname>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="control-label col-sm-2" for="country">Username:</label>
+                <div class="col-sm-10">
+                  <input type="text"  [disabled]="editInProgress" class="form-control" id="username" placeholder="Username" name="username" #username>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="control-label col-sm-2" for="country">Password:</label>
+                <div class="col-sm-10">
+                  <input type="text"  [disabled]="editInProgress" class="form-control" id="pass" placeholder="Password" name="pass" #pass>
+                </div>
+              </div>
+
+
+
+
+
+
+
+            <div class="modal-footer">
+              <button type="button" class="btn" data-dismiss="modal">Dismiss</button>
+              <button type="button" class="btn btn-success"  data-dismiss="modal" (click)="save(firstname.value, lastname.value, username.value, pass.value)">  Create  </button>
+            </div>
+
+
+
+          </form>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="editdoc" role="dialog" #editdoc>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" (click)="odustani()">&times;</button>
+
+       </div>
+       <div class="modal-body">
+
+
+          <form class="form-horizontal" >
+
+
+
+
+
+
+              <div class="form-group">
+                <label class="control-label col-sm-2" for="country">First Name:</label>
+                <div class="col-sm-10">
+                  <input type="text"  [disabled]="editInProgress" class="form-control" id="efirstname" placeholder="Enter Fist Name" name="firstname" #efirstname>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="control-label col-sm-2" for="country">Last Name:</label>
+                <div class="col-sm-10">
+                  <input type="text"  [disabled]="editInProgress" class="form-control" id="elastname" placeholder="Enter Last Name" name="lastname" #elastname>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="control-label col-sm-2" for="country">Username:</label>
+                <div class="col-sm-10">
+                  <input type="text"  [disabled]="editInProgress" class="form-control" id="eusername" placeholder="Username" name="username" #eusername>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="control-label col-sm-2" for="country">Password:</label>
+                <div class="col-sm-10">
+                  <input type="text"  [disabled]="editInProgress" class="form-control" id="epass" placeholder="Password" name="pass" #epass>
+                </div>
+              </div>
+
+
+
+
+
+
+
+            <div class="modal-footer">
+              <button type="button" class="btn" data-dismiss="modal">Dismiss</button>
+              <button type="button" class="btn btn-success"  data-dismiss="modal" (click)="saveEdit(efirstname.value, elastname.value, eusername.value, epass.value)">  Create  </button>
+            </div>
+
+
+
+          </form>
+      </div>
+
+    </div>
+  </div>
+</div>

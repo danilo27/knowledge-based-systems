@@ -1,0 +1,32 @@
+package drools.spring.rules;
+import com.model.Ingredient;
+import com.dto.ValidationDTO;
+import java.util.List;
+import java.util.ArrayList;
+
+rule "Ingredient allergy"
+	agenda-group "allergies-warning"
+    when
+    	$vb: ValidationDTO( $sl1: allergies )
+		$s: String() from $sl1
+		ValidationDTO( this == $vb, prepisani contains $s )
+    	
+	then
+     	System.out.println( "Alergican na sastojak: "  + $s);
+     	$vb.getWarnings().add($s);
+    	
+        
+end
+
+rule "Drug allergy"
+	agenda-group "allergies-warning"
+    when
+    	$vb: ValidationDTO( $sl1: drug_allergies )
+		$s: String() from $sl1
+		ValidationDTO( this == $vb, drug_prepisani contains $s )
+    	
+	then
+     	System.out.println( "Alergican na lek: "  + $s);
+     	$vb.getWarnings().add($s);
+    	  
+end

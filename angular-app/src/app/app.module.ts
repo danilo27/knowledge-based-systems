@@ -31,6 +31,12 @@ import { PatientsComponent } from './patients/patients.component';
 import { DiseasesComponent } from './diseases/diseases.component';
 import { SymptomsComponent } from './symptoms/symptoms.component';
 import { DrugsComponent } from './drugs/drugs.component';
+import { IngredientsComponent } from './ingredients/ingredients.component';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { DiagnoseComponent } from './diagnose/diagnose.component';
+import { ReportsComponent } from './reports/reports.component';
+import { TerapiesComponent } from './terapies/terapies.component';
+import { DoctorsComponent } from './doctors/doctors.component';
 
 @NgModule({
   declarations: [
@@ -53,13 +59,19 @@ import { DrugsComponent } from './drugs/drugs.component';
     PatientsComponent,
     DiseasesComponent,
     SymptomsComponent,
-    DrugsComponent
+    DrugsComponent,
+    IngredientsComponent,
+    DiagnoseComponent,
+    ReportsComponent,
+    TerapiesComponent,
+    DoctorsComponent
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
     AppRoutingModule,
     FormsModule,
+    NgSelectModule,
     NgbModule.forRoot(),
     SidebarModule.forRoot()
 

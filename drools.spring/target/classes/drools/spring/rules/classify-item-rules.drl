@@ -1,0 +1,103 @@
+package drools.spring.rules;
+
+import com.drools.spring.example.facts.Item;
+import com.model.Symptom;
+import com.model.Disease;
+import com.model.DiseaseHistory;
+import com.dto.DroolsDTO;
+import com.utils.DateUtils;
+import com.dto.SymptomsForDisDTO;
+
+rule "Prehlada"
+	salience 100
+ 
+	agenda-group "most_probable"
+    when
+        $drools_dto: DroolsDTO($symps: symps)
+        $count: Number(intValue >= 4) from accumulate (
+        	String(this=="Curenje iz nosa" 
+        		|| this=="Bol u grlu" 
+        		|| this=="Glavobolja"
+        		|| this=="Kijanje" 
+        		|| this=="Kasalj") from $symps,
+        	count(1)
+        )
+    then
+    	Disease d = new Disease(Long.valueOf(1), "Prehlada", 1, null);
+    	$drools_dto.getDiseases().add(d);
+        System.out.println("[DROOLS] Disease is: Prehlada");
+end
+
+rule "Groznica"
+	salience 99
+	
+	agenda-group "most_probable"
+	when
+        $drools_dto: DroolsDTO($symps: symps)
+        $count: Number(intValue >= 4) from accumulate (
+        	String(this=="Curenje iz nosa" 
+        	|| this=="Bol u grlu" 
+        	|| this=="Glavobolja"
+        	|| this=="Kijanje" 
+        	|| this=="Kasalj" 
+        	|| this=="Drhtavica" 
+        	|| this=="Temperatura veca od 38 C") from $symps,
+        	count(1)
+        )
+	then
+		System.out.println("symps:"+$symps);
+		Disease d = new Disease(Long.valueOf(1), "Groznica", 1, null);
+    	$drools_dto.getDiseases().add(d);
+		System.out.println("[DROOLS] Disease is: Groznica");
+end
+
+
+rule "Upala krajnika"
+	salience 88
+	
+	agenda-group "most_probable"
+	when
+        $drools_dto: DroolsDTO($symps: symps)
+        $count: Number(intValue >= 4) from accumulate (
+        	String(this=="Bol u grlu" 
+        	|| this=="Bol koji se siri do usiju" 
+        	|| this=="Glavobolja" 
+        	|| this=="Temperatura od 40 C do 41 C" 
+        	|| this=="Drhtavica" 
+        	|| this=="Gubitak apetita" 
+        	|| this=="Umor" 
+        	|| this=="Zuti sekret iz nosa") from $symps,
+        	count(1)
+        )
+	then
+		Disease d = new Disease(Long.valueOf(33), "Upala krajnika", 1, null);
+    	$drools_dto.getDiseases().add(d);
+		System.out.println("[DROOLS] Disease is: Upala krajnika");
+end
+ 
+rule "Sinusna infekcija"
+	salience 87
+	
+	agenda-group "most_probable"
+	when
+		$history: DiseaseHistory()
+        $drools_dto: DroolsDTO($symps: symps)
+        $count: Number(intValue >= 3) from accumulate (
+        	String(this=="Oticanje oko ociju" 
+        	|| this=="Glavobolja" 
+        	|| this=="Zuti sekret iz nosa" 
+        	|| this=="Bol u grlu" 
+        	|| this=="Temperatura veca od 38 C" 
+        	|| this=="Kasalj" ) from $symps,
+        	count(1)
+        )
+        $specificSympCount: Number(intValue >= 0) from accumulate (
+        	String(this == "Bolovao od prehlade odnosno groznice u poslednjih 60 dana") from $symps,
+        	count(1)
+        )
+        eval($count.intValue() + $specificSympCount.intValue() >= 4)
+	then
+		Disease d = new Disease(Long.valueOf(33), "Sinusna infekcija", 1, null);
+    	$drools_dto.getDiseases().add(d);
+		System.out.println("[DROOLS] Disease is: Sinusna infekcija");
+end

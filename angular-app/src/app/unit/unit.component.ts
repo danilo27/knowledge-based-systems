@@ -80,10 +80,10 @@ export class UnitComponent implements OnInit {
    }
 
   ngOnInit(){
-    this.getMyUnits();
-    this.getCats();
-    this.getTypes();
-    this.getExtras();
+    //this.getMyUnits();
+//    this.getCats();
+    //this.getTypes();
+    //this.getExtras();
     //$('.selectpicker').selectpicker('refresh');
     // setTimeout(() => {
     //   $('.selectpicker').selectpicker('refresh');

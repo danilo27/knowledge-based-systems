@@ -1,0 +1,119 @@
+<div class="container">
+    <div class="page-header">
+      <h1 style="text-align: center;" >Terapies</h1>
+    </div>
+    <div class="btn-group">
+      <button type="button" class="btn btn-default" (click)="getterapies()" >Refresh</button>
+
+
+    </div>
+
+
+    <hr>
+    <div class="row">
+        <div class="col-md-9 tab-content">
+
+            <div id="inbox" class="tab-pane fade in active" style="border-left: solid gray 1px;">
+              <table class="table table-condensed">
+
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>For Disease</th>
+                    <th>Doctor</th>
+                    <th>Patient</th>
+                    <th>Drugs</th>
+
+                  </tr>
+                </thead>
+                <tbody *ngFor="let m of terapies; let i=index">
+
+                  <tr>
+                    <td >{{m.id}}</td >
+                    <td>{{m.disease}}</td>
+                    <td >Dr {{m.doctor.firstname}} {{m.doctor.lastname}}</td >
+                    <td>{{m.patient.firstname}} {{m.patient.lastname}}</td>
+                    <td>
+                        <div class="dropdown">
+                          <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">Drugs
+                          <span class="caret"></span></button>
+                          <ul class="dropdown-menu">
+                            <li  *ngFor="let a of m.drugs"><a href="#" data-toggle="tooltip" >{{a.naziv}}</a></li>
+
+                          </ul>
+                        </div>
+                    </td>
+                    <td >
+                        <button type="button" class="btn btn-default btn-block" (click)="update_set(m.id)">Update</button>
+                    </td>
+                    <td >
+                        <button type="button" class="btn btn-default btn-block"  (click)="delete(m.id)">Delete</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+
+
+
+        </div>
+
+        </div>
+
+</div>
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="edit" role="dialog" #edit>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" (click)="odustani()">&times;</button>
+
+       </div>
+      <div class="modal-body">
+
+
+          <form class="form-horizontal" >
+
+
+              <div class="form-group">
+                <label class="control-label col-sm-2">Change Disease:</label>
+                <div class="col-sm-10" >
+
+                    <select [size]="diseases.length" [(ngModel)]="dis_chosen"  class="selectpicker" name="extras_selected" multiple>
+                      <option *ngFor="let s of diseases" [value]="s"  >{{s.name}}</option>
+                    </select>
+
+                </div>
+              </div>
+
+
+              <div class="form-group">
+                <label class="control-label col-sm-2">Choose Drugs:</label>
+                <div class="col-sm-10" >
+
+                    <select [size]="all_drugs.length" [(ngModel)]="drugs_added"  class="selectpicker" name="extras_selected" multiple>
+                      <option *ngFor="let s of all_drugs" [value]="s"  >{{s.naziv}}</option>
+                    </select>
+
+                </div>
+              </div>
+
+
+            <div class="modal-footer">
+              <button type="button" class="btn" data-dismiss="modal">Dismiss</button>
+              <button type="button" class="btn btn-success"  data-dismiss="modal" (click)="saveUpdate()">  Save Changes  </button>
+
+            </div>
+
+
+
+          </form>
+      </div>
+
+    </div>
+  </div>
+</div>

@@ -1,0 +1,130 @@
+package drools.spring.rules;
+import com.dto.DiagnoseDTO;
+import com.dto.SymptomsForDisDTO;
+
+
+rule "For Prehlada"
+    agenda-group "symptoms-for-disease"
+    when
+        String(this == "Prehlada")
+        $dto: SymptomsForDisDTO()
+    then
+        System.out.println("For Prehlada");
+        
+        $dto.getGeneral().add("Curenje iz nosa");
+        $dto.getGeneral().add("Bol u grlu");
+        $dto.getGeneral().add("Glavobolja");
+        $dto.getGeneral().add("Kijanje");
+        $dto.getGeneral().add("Kasalj");
+end
+
+rule "For Groznica"
+    agenda-group "symptoms-for-disease"    
+    when
+        String(this == "Groznica")
+        $dto: SymptomsForDisDTO()
+    then
+        System.out.println("For Groznica");
+        
+        $dto.getGeneral().add("Kijanje");
+        $dto.getGeneral().add("Bol u grlu");
+        $dto.getGeneral().add("Kasalj");
+        $dto.getGeneral().add("Temperatura veca od 38 C");    
+        $dto.getGeneral().add("Curenje iz nosa");
+        $dto.getGeneral().add("Glavobolja"); 
+        $dto.getGeneral().add("Drhtavica");
+      
+end
+
+rule "For Upala krajnika"
+    agenda-group "symptoms-for-disease"    
+    when
+        String(this == "Upala krajnika")
+        $dto: SymptomsForDisDTO()
+    then
+        System.out.println("For Upala krajnika");
+        
+        $dto.getGeneral().add("Bol u grlu");
+        $dto.getGeneral().add("Bol koji se siri do usiju");
+        $dto.getGeneral().add("Glavobolja"); 
+        $dto.getGeneral().add("Temperatura od 40 C do 41 C"); 
+        $dto.getGeneral().add("Drhtavica");
+        $dto.getGeneral().add("Gubitak apetita");
+        $dto.getGeneral().add("Umor"); 
+        $dto.getGeneral().add("Zuti sekret iz nosa");     
+end
+
+rule "For Sinusna infekcija"
+    agenda-group "symptoms-for-disease"    
+    when
+        String(this == "Sinusna infekcija")
+        $dto: SymptomsForDisDTO()
+    then
+        System.out.println("For Sinusna infekcija");
+        
+        $dto.getGeneral().add("Oticanje oko ociju");
+        $dto.getGeneral().add("Glavobolja");
+        $dto.getGeneral().add("Zuti sekret iz nosa"); 
+        $dto.getGeneral().add("Bol u grlu"); 
+        $dto.getGeneral().add("Temperatura veca od 38 C");
+        $dto.getGeneral().add("Kasalj");   
+        $dto.getSpecific().add("Bolovao od prehlade/groznice u poslednjih 60 dana");     
+end
+
+rule "For Hipertenzija"
+    agenda-group "symptoms-for-disease"  
+    when
+        String(this == "Hipertenzija")
+        $dto: SymptomsForDisDTO()
+    then
+        System.out.println("For Hipertenzija");
+        $dto.getSpecific().add("U poslednjih 6 meseci zabelezeno 10 ili vise slucajeva visokog krvnog pritiska");
+
+end
+
+rule "For Dijabetes"
+    agenda-group "symptoms-for-disease"  
+    when
+        String(this == "Dijabetes")
+        $dto: SymptomsForDisDTO()
+    then
+        System.out.println("For Dijabetes");
+        $dto.getGeneral().add("Cesto uriniranje");
+        $dto.getGeneral().add("Gubitak telesne tezine");
+        $dto.getGeneral().add("Zamor");  
+        $dto.getGeneral().add("Mucnina i povracanje");      
+
+end
+
+rule "For Hronicna bubrezna bolest"
+    agenda-group "symptoms-for-disease"  
+    when
+        String(this == "Hronicna bubrezna bolest")
+        $dto: SymptomsForDisDTO()
+    then
+        System.out.println("For Hronicna bubrezna bolest ");
+        $dto.getGeneral().add("Zamor");
+        $dto.getGeneral().add("Nocturia");
+        $dto.getGeneral().add("Otoci nogu i zglobova");
+        $dto.getGeneral().add("Gusenje");
+        $dto.getGeneral().add("Bol u grudima");
+        $dto.getSpecific().add("Boluje od hipertenzije vise od 6 meseci");
+        $dto.getSpecific().add("Boluje od dijabetesa");
+end
+
+
+rule "For Akutna bubrezna povreda"
+    agenda-group "symptoms-for-disease"  
+    when
+        String(this == "Akutna bubrezna povreda")
+        $dto: SymptomsForDisDTO()
+    then
+        System.out.println("For Akutna bubrezna povreda");
+        $dto.getGeneral().add("Oticanje nogu i zglobova");
+        $dto.getGeneral().add("Gusenje");
+        $dto.getGeneral().add("Zamor");
+        $dto.getGeneral().add("Dijareja");
+        $dto.getGeneral().add("Oporavlja se od operacije");
+        $dto.getSpecific().add("U poslednjih 14 dana imao povišenu telesnu temperaturu");
+        $dto.getSpecific().add("U poslednjih 21 dana primao antibiotike");
+end

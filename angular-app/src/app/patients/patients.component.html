@@ -1,9 +1,9 @@
 <div class="container">
     <div class="page-header">
-      <h1 style="text-align: center;" >Messages</h1>
+      <h1 style="text-align: center;" >Patients</h1>
     </div>
     <div class="btn-group">
-      <button type="button" class="btn btn-primary" (click)="getMyMessages()">Refresh</button>
+      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newp">Add</button>
 
 
     </div>
@@ -11,14 +11,6 @@
 
     <hr>
     <div class="row">
-        <div class="col-md-3">
-          <ul class="nav nav-pills nav-stacked">
-            <li class="active"><a data-toggle="pill" href="#inbox">Inbox</a></li>
-            <li><a data-toggle="pill" href="#sent">Sent</a></li>
-
-           </ul>
-        </div>
-
         <div class="col-md-9 tab-content">
 
             <div id="inbox" class="tab-pane fade in active" style="border-left: solid gray 1px;">
@@ -26,14 +18,34 @@
 
                 <thead>
                   <tr>
-                    <th>From</th>
+                    <th>ID</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Alergies</th>
                   </tr>
                 </thead>
-                <tbody *ngFor="let m of my_messages; let i=index">
+                <tbody *ngFor="let m of patients; let i=index">
 
-                  <tr *ngIf="m.senderType=='User'">
+                  <tr>
+                    <td >{{m.id}}</td >
+                    <td >{{m.firstname}}</td >
+                    <td >{{m.lastname}}</td >
                     <td >
-                        <button type="button" class="btn btn-default btn-block"  (click)="openMessage(m)">{{m.user.username}}</button>
+                        <div class="dropdown">
+                      <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">Alergies
+                      <span class="caret"></span></button>
+                      <ul class="dropdown-menu">
+                        <li  *ngFor="let a of m.alergies"><a href="#" data-toggle="tooltip" >{{a.name}}</a></li>
+
+                      </ul>
+                    </div>
+
+                   </td >
+                    <td >
+                        <button type="button" class="btn btn-default btn-block"  (click)="update_set(m.id)">Update</button>
+                    </td>
+                    <td >
+                        <button type="button" class="btn btn-default btn-block"  (click)="delete(m.id)">Delete</button>
                     </td>
                   </tr>
                 </tbody>
@@ -41,24 +53,7 @@
             </div>
 
 
-            <div id="sent" class="tab-pane fade in" style="border-left: solid gray 1px;">
-              <table class="table table-condensed">
-                            <thead>
-                              <tr>
-                                <th>To</th>
-                              </tr>
-                            </thead>
-                            <tbody *ngFor="let m of my_messages">
-                               <tr *ngIf="m.senderType=='Agent'">
-                                 <td >
-                                     <button type="button" class="btn btn-default btn-block" (click)="openSentMessage(m.content)">{{m.user.username}}</button>
-                                 </td>
 
-
-                              </tr>
-                            </tbody>
-              </table>
-            </div>
 
         </div>
 
@@ -113,46 +108,79 @@
 
 
 <!-- Modal -->
-<div class="modal fade" id="openMessageModule" role="dialog" #openMessageModule>
+<div class="modal fade" id="newp" role="dialog" #newp>
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" (click)="odustani()">&times;</button>
 
        </div>
-      <div class="modal-body">
+       <div class="modal-body">
 
 
           <form class="form-horizontal" >
 
 
-            <div class="form-group">
-              <label class="control-label col-sm-2" for="from">Sender:</label>
-              <div class="col-sm-10" name="from">
-                  {{from}}
-              </div>
-            </div>
 
 
-            <div class="form-group" style="height: 200px;">
-              <label class="control-label col-sm-2" for="opis">Message:</label>
-              <div class="col-sm-10">
-                <textarea disabled style="height: 200px;" class="form-control" #contentrecieved>{{contentrec}}</textarea>
-              </div>
-            </div>
 
-            <div class="form-group" style="height: 200px;">
-              <label class="control-label col-sm-2" for="opis"></label>
-              <div class="col-sm-10">
-                <textarea  style="height: 200px;" class="form-control"  placeholder="Reply" name="opis" #replycontent></textarea>
+
+              <div class="form-group">
+                <label class="control-label col-sm-2" for="country">First Name:</label>
+                <div class="col-sm-10">
+                  <input type="text"  [disabled]="editInProgress" class="form-control" id="firstname" placeholder="Enter Fist Name" name="firstname" #firstname>
+                </div>
               </div>
-            </div>
+
+              <div class="form-group">
+                <label class="control-label col-sm-2" for="country">Last Name:</label>
+                <div class="col-sm-10">
+                  <input type="text"  [disabled]="editInProgress" class="form-control" id="lastname" placeholder="Enter Last Name" name="lastname" #lastname>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="control-label col-sm-2">Alergies:</label>
+                <div class="col-sm-10">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    <select [(ngModel)]="alergies"  class="selectpicker" name="extras_selected" multiple>
+                      <option *ngFor="let ing of ingredients" [value]="ing"  >{{ing.name}}</option>
+                    </select>
+                    <ol>
+                        <li *ngFor="let a of alergies">
+                            {{a.name}}
+                        </li>
+                    </ol>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="control-label col-sm-2" for="country">Disease History:</label>
+                <div class="col-sm-10">
+                  <input type="text"  [disabled]="editInProgress" class="form-control" id="history" placeholder="History" name="history" #history>
+                </div>
+              </div>
+
+
+
 
 
             <div class="modal-footer">
               <button type="button" class="btn" data-dismiss="modal">Dismiss</button>
-              <button type="button" class="btn btn-success" style="width:60px;" data-dismiss="modal" (click)="reply(replycontent)">  Send  </button>
-
+              <button type="button" class="btn btn-success"  data-dismiss="modal" (click)="save(firstname.value, lastname.value)">  Create  </button>
             </div>
 
 
@@ -164,27 +192,74 @@
   </div>
 </div>
 
-<div class="modal fade" id="sentModal" role="dialog" #sentModal>
+
+
+
+<div class="modal fade" id="edit" role="dialog" #edit>
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" (click)="odustani()">&times;</button>
 
        </div>
-      <div class="modal-body">
+       <div class="modal-body">
 
 
           <form class="form-horizontal" >
 
-            <div class="form-group" style="height: 200px;">
-              <label class="control-label col-sm-2" for="opis">Message:</label>
-              <div class="col-sm-10">
-                <textarea disabled style="height: 200px;" class="form-control" #contentrecieved>{{sentcontent}}</textarea>
+
+
+
+
+
+              <div class="form-group">
+                <label class="control-label col-sm-2" for="country">First Name:</label>
+                <div class="col-sm-10">
+                  <input type="text"  [disabled]="editInProgress" class="form-control" id="edit_firstname" placeholder="Enter Fist Name" name="firstname" #edit_firstname>
+                </div>
               </div>
-            </div>
+
+              <div class="form-group">
+                <label class="control-label col-sm-2" for="country">Last Name:</label>
+                <div class="col-sm-10">
+                  <input type="text"  [disabled]="editInProgress" class="form-control" id="edit_lastname" placeholder="Enter Last Name" name="lastname" #edit_lastname>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="control-label col-sm-2">Alergies:</label>
+                <div class="col-sm-10">
+                    <select [(ngModel)]="alergies"  class="selectpicker" name="extras_selected" multiple>
+                      <option *ngFor="let ing of ingredients" [value]="ing"  >{{ing.name}}</option>
+                    </select>
+
+                    <ol>
+                        <li *ngFor="let a of alergies">
+                            {{a.name}}
+                        </li>
+                    </ol>
+                </div>
+              </div>
+
+
+
+
+
+
+              <div class="form-group">
+                <label class="control-label col-sm-2" for="country">Disease History:</label>
+                <div class="col-sm-10">
+                  <input type="text"  [disabled]="editInProgress" class="form-control" id="history" placeholder="History" name="history" #history>
+                </div>
+              </div>
+
+
+
+
 
             <div class="modal-footer">
-              <button type="button" class="btn" data-dismiss="modal">Close</button>
+              <button type="button" class="btn" data-dismiss="modal" (click)="dismiss()">Dismiss</button>
+              <button type="button" class="btn btn-success"   data-dismiss="modal" (click)="update(edit_firstname.value, edit_lastname.value)">  Update  </button>
             </div>
 
 
